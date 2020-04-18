@@ -45,11 +45,6 @@ resource "aws_iam_role_policy_attachment" "cluster-AmazonCloudwatchPolicy" {
   role       = aws_iam_role.cluster.name
 }
 
-resource "aws_iam_role_policy_attachment" "node-AmazonCloudwatchPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
-  role       = aws_iam_role.node.name
-}
-
 
 resource "aws_iam_role" "node" {
   name = "${var.cluster_name}-eks-node-role"
@@ -80,6 +75,11 @@ resource "aws_iam_role_policy_attachment" "node-AmazonEKS_CNI_Policy" {
   role       = aws_iam_role.node.name
 }
 
+resource "aws_iam_role_policy_attachment" "node-AmazonCloudwatchPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+  role       = aws_iam_role.node.name
+}
+
 resource "aws_iam_role_policy_attachment" "node-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.node.name
@@ -106,6 +106,7 @@ resource "aws_eks_cluster" "eks" {
   depends_on = [
     aws_iam_role_policy_attachment.cluster-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.cluster-AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.cluster-CloudWatchFullAccess,
   ]
 }
 
@@ -129,5 +130,6 @@ resource "aws_eks_node_group" "aws-eks-node-group" {
     aws_iam_role_policy_attachment.node-AmazonEKSWorkerNodePolicy,
     aws_iam_role_policy_attachment.node-AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.node-AmazonEC2ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.node-AmazonCloudwatchPolicy
   ]
 }
