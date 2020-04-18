@@ -57,3 +57,8 @@ module "eks" {
     private_subnet_ids          = module.vpc.eks_private_subnet_ids
 }
 
+module "ecr" {
+    source = "../../modules/ecr"
+    ecr_registry_names = ["course-day-service-registry"]
+}
+
