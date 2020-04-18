@@ -40,6 +40,16 @@ resource "aws_iam_role_policy_attachment" "cluster-AmazonEKSServicePolicy" {
   role       = aws_iam_role.cluster.name
 }
 
+resource "aws_iam_role_policy_attachment" "cluster-AmazonCloudwatchPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+  role       = aws_iam_role.cluster.name
+}
+
+resource "aws_iam_role_policy_attachment" "node-AmazonCloudwatchPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+  role       = aws_iam_role.node.name
+}
+
 
 resource "aws_iam_role" "node" {
   name = "${var.cluster_name}-eks-node-role"
